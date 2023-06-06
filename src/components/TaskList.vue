@@ -52,6 +52,9 @@
                 <v-btn icon @click="deleteTask(task)">
                   <v-icon>mdi-delete</v-icon>
                 </v-btn>
+                <v-btn icon @click="archiveTask(task)">
+                  <v-icon>mdi-archive</v-icon>
+                </v-btn>
               </v-speed-dial>
             </v-list-item-action>
           </v-list-item>
@@ -59,6 +62,13 @@
       </v-card-text>
       <v-card-text v-else>
         <p>No tasks at the moment.</p>
+      </v-card-text>
+    </v-card>
+    <v-card class="archived-tasks">
+      <v-card-text>
+        <v-row justify="center">
+          <v-btn color="primary" dark @click="viewCompletedTasks">View Completed Tasks</v-btn>
+        </v-row>
       </v-card-text>
     </v-card>
   </v-container>
@@ -69,6 +79,7 @@ export default {
   data() {
     return {
       tasks: [],
+      archivedTasks: [],
       newTask: ''
     };
   },
@@ -102,6 +113,26 @@ export default {
       if (index !== -1) {
         this.tasks.splice(index, 1);
       }
+    },
+    archiveTask(task) {
+      const index = this.tasks.indexOf(task);
+      if (index !== -1) {
+        const archivedTask = {
+          id: task.id,
+          name: task.name
+        };
+      console.log("archivage", archivedTask)
+        this.tasks.splice(index, 1);
+        this.archivedTasks.push(archivedTask);
+      console.log("archivage", this.archivedTasks)
+      }
+    },
+    viewCompletedTasks() {
+      console.log("view", this.archivedTasks)
+      this.$router.push({
+        name: 'CompletedTasks',
+        params: { archivedTasks: this.archivedTasks }
+      });
     }
   }
 };
@@ -135,7 +166,12 @@ export default {
   background-color: #b9f6ca;
 }
 
-.task-list__action-button {
-  color: #555;
+.archived-tasks {
+  background-color: #f5f5f5;
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 20px;
+  text-align: center;
+  font-family: 'Roboto', sans-serif;
 }
 </style>
